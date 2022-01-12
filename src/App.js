@@ -1,6 +1,6 @@
 import React from 'react';
-import Form from './components/Form/Form';
-import Card from './components/Card/Card';
+import Form from './components/Form/';
+import Card from './components/Card/';
 
 import { Container, ContainerMyCards } from './Styles';
 
