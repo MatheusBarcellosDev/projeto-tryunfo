@@ -34,6 +34,7 @@ class Form extends Component {
                 data-testid="name-input"
                 value={ cardName }
                 onChange={ onInputChange }
+                autoComplete="off"
               />
             </label>
           </div>
@@ -96,6 +97,7 @@ class Form extends Component {
                 data-testid="image-input"
                 value={ cardImage }
                 onChange={ onInputChange }
+                autoComplete="off"
               />
             </label>
           </div>
@@ -109,7 +111,7 @@ class Form extends Component {
               value={ cardRare }
               onChange={ onInputChange }
             >
-              <option value="normal">normal</option>
+              <option value="normal" selected>normal</option>
               <option value="raro">raro</option>
               <option value="muito raro">muito raro</option>
             </select>

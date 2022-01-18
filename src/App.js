@@ -2,7 +2,8 @@ import React from 'react';
 import Form from './components/Form';
 import Card from './components/Card';
 
-import { Container, ContainerMyCards } from './Styles';
+import Container from './Styles';
+import MyCards from './components/MyCards';
 
 class App extends React.Component {
   constructor() {
@@ -11,6 +12,8 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleValidation = this.handleValidation.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleRemoveCard = this.handleRemoveCard.bind(this);
+    this.handleFilterCard = this.handleFilterCard.bind(this);
 
     this.state = {
       cardName: '',
@@ -19,7 +22,7 @@ class App extends React.Component {
       cardAttr2: '',
       cardAttr3: '',
       cardImage: '',
-      cardRare: '',
+      cardRare: 'normal',
       cardTrunfo: false,
       hasTrunfo: false,
       isSaveButtonDisabled: true,
@@ -77,6 +80,18 @@ class App extends React.Component {
     }
   }
 
+  handleFilterCard({ target }) {
+    const { myCards, cardsFilter } = this.state;
+    this.setState({
+      cardsFilter: myCards.filter((card) => {
+        if (target.checked) {
+          return card.cardTrunfo;
+        }
+        return card.cardName.includes(target.value) || card.cardRare !== target.value;
+      }, console.log(cardsFilter)),
+    });
+  }
+
   handleChange({ target }) {
     const { name } = target;
     const value = target.type !== 'checkbox' ? target.value : target.checked;
@@ -93,7 +108,7 @@ class App extends React.Component {
     const filterCard = myCards.filter((card) => card.cardName !== name);
     this.setState({
       myCards: filterCard,
-      hasTrunfo: filterCard.length > 0,
+      hasTrunfo: filterCard.some((card) => card.cardTrunfo),
     });
   }
 
@@ -152,10 +167,10 @@ class App extends React.Component {
       isSaveButtonDisabled,
       myCards,
     } = this.state;
-
     return (
-      <>
-        <Container>
+      <Container>
+        <div className="containerInfo">
+
           <Form
             onInputChange={ this.handleChange }
             onSaveButtonClick={ this.handleSave }
@@ -185,60 +200,13 @@ class App extends React.Component {
               cardTrunfo={ cardTrunfo }
             />
           </aside>
-        </Container>
+        </div>
+        <MyCards
+          myCards={ myCards }
+          onRemoveCard={ this.handleRemoveCard }
+        />
 
-        <ContainerMyCards>
-          <div className="myCards">
-            <h3>Todas as cartas</h3>
-
-            <h5>Filtros de busca</h5>
-            <input type="text" placeholder="Nome da carta" id="nameCard" />
-            <select>
-              <option value="" disabled selected hidden>
-                Raridade
-              </option>
-              <option value="normal">normal</option>
-              <option value="raro">raro</option>
-              <option value="muito raro">muito raro</option>
-            </select>
-            <div className="filterSuperTrunfo">
-              <input type="checkbox" />
-              <span>Super Trunfo</span>
-            </div>
-            <div className="btnFilter">
-              <button type="button">Buscar</button>
-            </div>
-
-          </div>
-          <div className="listMyCards">
-            <ul>
-              {myCards.map((card, index) => (
-                <li key={ index }>
-                  <Card
-                    cardName={ card.cardName }
-                    cardDescription={ card.cardDescription }
-                    cardImage={ card.cardImage }
-                    cardAttr1={ card.cardAttr1 }
-                    cardAttr2={ card.cardAttr2 }
-                    cardAttr3={ card.cardAttr3 }
-                    cardRare={ card.cardRare }
-                    cardTrunfo={ card.cardTrunfo }
-                  />
-
-                  <button
-                    type="button"
-                    data-testid="delete-button"
-                    onClick={ () => this.handleRemoveCard(card.cardName) }
-                  >
-                    Excluir
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </ContainerMyCards>
-      </>
-    );
+      </Container>);
   }
 }
 
